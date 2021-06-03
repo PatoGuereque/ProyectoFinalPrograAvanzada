@@ -40,6 +40,12 @@ void write_response(client_t *client, char *message) {
     free(response);
 }
 
+void write_raw_response(client_t *client, char *message) {
+    size_t message_size = strlen(message);
+    write(client->connfd, &message_size, sizeof(size_t));
+    write(client->connfd, message, message_size);
+}
+
 int is_number(char *text) {
     int j;
     j = strlen(text);
