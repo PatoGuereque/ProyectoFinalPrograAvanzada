@@ -1,10 +1,11 @@
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
+
 #include "client.h"
 
 #define TIME_SIZE 8
@@ -25,10 +26,10 @@ void write_number_messages(client_t *client, int num) {
 }
 
 void write_response(client_t *client, char *message) {
-    char *time_string = malloc(TIME_SIZE + 1); // +1 for '\0'
+    char *time_string = malloc(TIME_SIZE + 1);  // +1 for '\0'
     write_curr_time(time_string);
 
-    size_t response_size = snprintf(NULL, 0, "[%s]: %s", time_string, message) + 1; // +1 for '\0'
+    size_t response_size = snprintf(NULL, 0, "[%s]: %s", time_string, message) + 1;  // +1 for '\0'
     char *response = malloc(response_size);
     sprintf(response, "[%s]: %s", time_string, message);
 

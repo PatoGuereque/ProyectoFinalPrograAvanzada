@@ -1,13 +1,13 @@
-#include <stdio.h>
-#include <pthread.h>
-#include <stdio.h>
-#include <sys/socket.h>
-#include <signal.h>
-#include <unistd.h> 
-#include <stdlib.h>
 #include <netinet/in.h>
-#include "constants.h"
+#include <pthread.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
 #include "client.h"
+#include "constants.h"
 
 // threads
 pthread_mutex_t lock;
@@ -16,7 +16,7 @@ int max_threads = 0;
 int threads_available = 0;
 
 // all the connected client instances
-client_t** clients;
+client_t **clients;
 
 // server socket
 int serverfd;
@@ -29,7 +29,7 @@ int serverfd;
  * this delegates the call to client.c handle_client() method
  */
 void *client_thread(void *arg) {
-    client_t *client = (client_t *) arg;
+    client_t *client = (client_t *)arg;
     handle_client(client);
     return 0;
 }
@@ -38,14 +38,14 @@ void *client_thread(void *arg) {
  * Closes and returns a thread to our "pool"
  * Also frees the client from memory
  */
-void close_client(void* args) {
-    client_t *client = (client_t *) args;
+void close_client(void *args) {
+    client_t *client = (client_t *)args;
     close(client->connfd);
     pthread_mutex_lock(&lock);
     threads_available++;
     int intid = client->internal_id;
     free(client);
-    *(clients+intid) = NULL;
+    *(clients + intid) = NULL;
     pthread_cond_signal(&cv);
     pthread_mutex_unlock(&lock);
     printf("[Client %d] disconnected.\n", intid);
@@ -58,17 +58,17 @@ void close_client(void* args) {
  * This overrides the default SIGINT behavior
  */
 void close_connections() {
-   printf("Closing all connections!\n");
-   close(serverfd);
+    printf("Closing all connections!\n");
+    close(serverfd);
 
-   for (int i = 0; i < max_threads; i++) {
-       if (*(clients+i) != NULL) {
-           close_client(*(clients+i));
-       }
-   }
+    for (int i = 0; i < max_threads; i++) {
+        if (*(clients + i) != NULL) {
+            close_client(*(clients + i));
+        }
+    }
 
-   free(clients);
-   exit(0);
+    free(clients);
+    exit(0);
 }
 
 int main(int argc, char *argv[]) {
@@ -130,9 +130,9 @@ int main(int argc, char *argv[]) {
         // also subtracts a thread from our "pool"
         pthread_mutex_lock(&lock);
         for (int i = 0; i < max_threads; i++) {
-            if (*(clients+i) == NULL) {
+            if (*(clients + i) == NULL) {
                 client->internal_id = i;
-                *(clients+i) = client;
+                *(clients + i) = client;
                 break;
             }
         }
