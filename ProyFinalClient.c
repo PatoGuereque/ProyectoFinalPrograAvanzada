@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <unistd.h> 
+#include <unistd.h>
 #include <string.h>
 #include "constants.h"
+#include "utils.h"
 
 #define IP "127.0.0.1"
 
@@ -14,7 +15,8 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    if (!atoi(argv[1])) {
+    int num = atoi(argv[1]);
+    if (!is_number(argv[1])) {
         perror("invalid args");
         exit(-1);
     }
@@ -32,12 +34,19 @@ int main(int argc, char *argv[]) {
     }
 
     // send the number param
-    write(connfd, argv[1], strlen(argv[1]));
+    write(connfd, &num, sizeof(num));
 
-    char *buffer = (char *)malloc(10000*sizeof(char));
-    read(connfd, buffer, 10000);
-    printf("Recieved: %s\n", buffer);
-    free(buffer);
+    int messages;
+    read(connfd, &messages, sizeof(int));
+    while (messages--) {
+        size_t response_bytes;
+        read(connfd, &response_bytes, sizeof(size_t));
+
+        char *buffer = malloc(response_bytes * sizeof(char));
+        read(connfd, buffer, response_bytes);
+        printf("%s\n", buffer);
+        free(buffer);
+    }
 
     close(connfd);
     return 0;
