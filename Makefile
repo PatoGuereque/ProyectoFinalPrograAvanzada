@@ -8,7 +8,7 @@ LIBDIR  = bin
 
 # Compiler args
 CC = gcc
-args = -Wall -lm -lpthread
+args = -Wall -lm -lpthread -fopenmp
 
 # Default target
 .PHONY: all
