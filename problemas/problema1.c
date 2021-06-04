@@ -28,7 +28,7 @@ void problema1(client_t *client, const int n) {
 
     size_t response_size = snprintf(NULL, 0, "Ecuacuón de la recta: y = %.7lfx + %.7lf", m, b) + 1;  // +1 for '\0'
     char *response = malloc(response_size);
-    sprintf(response, "Ecuacuón de la recta: y = %.7lfx + %.7lfb", m, b);
+    sprintf(response, "Ecuacuón de la recta: y = %.7lfx + %.7lf", m, b);
     write_raw_response(client, response);
     free(response);
 }
