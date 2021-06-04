@@ -84,6 +84,9 @@ int main(int argc, char *argv[]) {
     // read number of threads
     max_threads = atoi(argv[1]);
     clients = malloc(sizeof(client_t *) * max_threads);
+    for (int i = 0; i < max_threads; i++) {
+        *(clients + i) = NULL;
+    }
     threads_available = max_threads;
 
     // create the socket
