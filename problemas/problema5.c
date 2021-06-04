@@ -54,7 +54,6 @@ int primos2(int num){
 }
 
 void problema5(client_t *client, const int n) {
-    char closest_num[10];
     char response[50];
     write_number_messages(client, 2);
     write_response(client, "Solving for problem 5");
